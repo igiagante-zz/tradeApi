@@ -26,6 +26,18 @@ const UserSchema = new Schema({
     }
 });
 
+
+
+/**
+ * Add your
+ 
+ * - validations
+ * - virtuals
+ */
+
+ /**
+ * pre-save hooks
+ */
 UserSchema.pre("save", function (next) {
     bcrypt.hash(this.password, 10, (err, hash) => {
         this.password = hash;
@@ -34,16 +46,9 @@ UserSchema.pre("save", function (next) {
 });
 
 /**
- * Add your
- * - pre-save hooks
- * - validations
- * - virtuals
- */
-
-/**
  * Methods
  */
-UserSchema.methods.comparePassword = (passwordOne) => {
+UserSchema.methods.comparePassword = function (passwordOne) {
 
     console.log('user this : ' + this);
     console.log('user this.password : ' + this.password);

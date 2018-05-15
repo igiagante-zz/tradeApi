@@ -1,0 +1,16 @@
+{
+    "users": [
+      {
+        "firstname": "jose",
+        "lastname": "almendra",
+        "email": "pepe@gmial.com",
+        "password": "pepe"
+      },
+      {
+        "firstname": "other",
+        "lastname": "other",
+        "email": "jose@gmial.com",
+        "password": "other"
+      }
+    ]
+  }

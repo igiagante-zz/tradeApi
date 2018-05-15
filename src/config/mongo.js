@@ -37,6 +37,24 @@ const connect = () => {
 
         resolve('Connected successfully to MongoDB: ' + mongoUri);
     })
-  }
+};
+
+const cleanDB = () => {
+
+    return new Promise((resolve, reject) => {
+
+        // connect to mongo db
+        const mongoUri = settings.mongo.host;
+
+        mongoose.connect(mongoUri, { useMongoClient: true });
+
+        mongoose.connection.on('error', () => {
+            reject(new Error(`unable to connect to database: ${mongoUri}`));
+        });
+
+        resolve('Connected successfully to MongoDB: ' + mongoUri);
+    })
+};
+
 
 module.exports = Object.assign({}, {connect});

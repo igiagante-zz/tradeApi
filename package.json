@@ -44,7 +44,7 @@
     ]
   },
   "scripts": {
-    "test": "mocha -R spec src/**/*.spec.js",
+    "test": "export NODE_ENV=test; mocha -R spec test/**/*.spec.js",
     "start": "node src/index.js",
     "lint": "standard --verbose | snazzy",
     "node-debug": "DEBUG=trade* node src/index.js",

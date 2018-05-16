@@ -3,14 +3,16 @@ const expect = require('chai').expect;
 const mongoose = require('mongoose');
 const { initDB, cleanDB } = require('../mongo/mongo_config');
 const UserModel = require('../../src/models/user');
+
+const testData = require('../resources/users.json');
+
+after(() => cleanDB(testData));
   
 describe('User tests', () => {
 
-    const testData = require('../resources/users.json');
-
     beforeEach(() => initDB(testData));
     afterEach(() => cleanDB(testData));
-
+    
     it('should failed trying to save an user that already exists', async () => {
 
         const user = new UserModel ({
@@ -29,6 +31,15 @@ describe('User tests', () => {
         }
     });
 
+    it('should transform _id from Mongo to id', async () => {
+
+        const user = await UserModel.getByKeyAndValue('firstname', 'jose');
+
+        expect(user).to.have.property('id');
+        expect(user.id).equal(user._id);
+
+    });
+
     it('should find all users', async () => {
 
         const users = await UserModel.list();
@@ -44,5 +55,5 @@ describe('User tests', () => {
         expect(user.email).to.equal('jose@gmial.com');
 
     });
-    
+
 });

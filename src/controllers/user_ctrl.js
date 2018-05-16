@@ -22,13 +22,15 @@ let _createToken = function(user) {
 
 let signup = function(req, res, next) {
 
-    if (!req.body.username || !req.body.password) {
+    if (!req.body.email || !req.body.password) {
         res.json({success: false, msg: 'Please pass name and password.'});
     } else {
 
-        let newUser = new User({
-            name: req.body.username,
-            password: req.body.password
+        const newUser = new User ({
+            firstname: "pepe",
+            lastname: "almendra",
+            email: "pepe@gmaill.com",
+            password: "pepe"
         });
 
         newUser.save()
@@ -36,7 +38,10 @@ let signup = function(req, res, next) {
                     return res.status(200).json({token: _createToken(savedUser)})
                 }
             )
-            .catch(e => next(e));
+            .catch(e => {
+                console.log('error : ' + e); 
+                next(e);
+            });
     }
 };
 
@@ -44,7 +49,7 @@ let login = async function(req, res, next) {
 
     try {
 
-        let user = await User.getByName(req.body.username);
+        let user = await User.getByKeyAndValue('email', req.body.email);
         let success = await user.comparePassword(req.body.password);
 
         if (success) {
@@ -58,6 +63,7 @@ let login = async function(req, res, next) {
             return next(err);
         }
     } catch (error) {
+        // TODO: validate mongo errors
         const err = new APIError(httpStatus.UNAUTHORIZED, 'Authentication error', 601,  'The password is not correct');
         return next(err);
     }

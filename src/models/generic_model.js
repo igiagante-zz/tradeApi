@@ -26,7 +26,7 @@ const genericSchema = function genericSchemaPlugin (schema, options) {
     schema.statics = {
         /**
          * Get entity by id
-         * @param {ObjectId} id - The objectId of entity.
+         * @param {ObjectId} id - The entity's objectId.
          * @returns {Promise<Entity, APIError>}
          */
         getById(id) {
@@ -36,9 +36,10 @@ const genericSchema = function genericSchemaPlugin (schema, options) {
         },
 
         /**
-         * Get entity by name
-         * @param {String} name - The entity's name.
-         * @returns {Promise<User, APIError>}
+         * Get entity by key and value
+         * @param {String} key - Object's key.
+         * @param {String} value - Key's value.
+         * @returns {Promise<Entity, APIError>}
          */
         getByKeyAndValue(key, value) {
 
@@ -52,9 +53,9 @@ const genericSchema = function genericSchemaPlugin (schema, options) {
 
         /**
          * List entities in descending order of 'createdAt' timestamp.
-         * @param {number} skip - Number of users to be skipped.
-         * @param {number} limit - Limit number of users to be returned.
-         * @returns {Promise<User[]>}
+         * @param {number} skip - Number of entities to be skipped.
+         * @param {number} limit - Limit number of entities to be returned.
+         * @returns {Promise<Entity[]>}
          */
         list({ skip = 0, limit = 50 } = {}) {
             return this.find()
@@ -72,7 +73,6 @@ const genericSchema = function genericSchemaPlugin (schema, options) {
     /**
      * Add virtuals
     */
-
     schema.virtual('id').get(function () { 
         return this._id;
     });

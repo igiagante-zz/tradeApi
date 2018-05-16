@@ -14,9 +14,9 @@ mongoose.Promise = Promise;
 const connectionTest = () => {
 
     // connect to mongo db
-    const mongoUri = "mongodb://localhost/trade-test";//settings.mongo.host;
+    const mongoUri = "mongodb://localhost/trade-test";
 
-    const connect = () => {
+    const connection = () => {
 
         return new Promise((resolve, reject) => {
 
@@ -34,7 +34,7 @@ const connectionTest = () => {
 
     const cleanDB = (data) => {
 
-        return connect()
+        return connection()
             .then(db => db.collections)
             .then(collections => {
                 const requests = Object.keys(data).map(col => {
@@ -46,7 +46,7 @@ const connectionTest = () => {
 
     const initDB = (data) => {
 
-       return connect().then(
+       return connection().then(
             db => {
                 
                 const requests = Object.keys(data).map(col => {
@@ -59,7 +59,7 @@ const connectionTest = () => {
         ).catch(e => console.log('Mongoose Error : ' + e));
     };
 
-    return Object.assign({}, { initDB, cleanDB });
+    return Object.assign({}, { connection, initDB, cleanDB });
 }
 
 module.exports = connectionTest();

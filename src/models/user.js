@@ -28,8 +28,7 @@ const UserSchema = new Schema({
     lastname: {
         type: String,
         required: true
-    },
-    gardensIds: [{_id: Schema.Types.ObjectId}]
+    }
 });
 
 UserSchema.plugin(genericModel);

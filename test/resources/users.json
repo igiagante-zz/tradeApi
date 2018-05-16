@@ -3,13 +3,13 @@
       {
         "firstname": "pepe",
         "lastname": "almendra",
-        "email": "pepe@gmial.com",
+        "email": "pepe@gmail.com",
         "password": "pepe"
       },
       {
         "firstname": "jose",
         "lastname": "termidor",
-        "email": "jose@gmial.com",
+        "email": "jose@gmail.com",
         "password": "other"
       }
     ]

@@ -18,7 +18,7 @@ describe('User tests', () => {
         const user = new UserModel ({
             firstname: "pepe",
             lastname: "almendra",
-            email: "pepe@gmial.com",
+            email: "pepe@gmaill.com",
             password: "pepe"
         });
 
@@ -52,7 +52,7 @@ describe('User tests', () => {
     it('should find an user by name', async () => {
 
         const user = await UserModel.getByKeyAndValue('firstname', 'jose');
-        expect(user.email).to.equal('jose@gmial.com');
+        expect(user.email).to.equal('jose@gmail.com');
 
     });
 

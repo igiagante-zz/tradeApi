@@ -9,7 +9,7 @@ const genericSchema = function genericSchemaPlugin (schema, options) {
 
     const resolvePromise = (entity) => {
         if (entity) {
-            return entity;
+            return Promise.resolve(entity);
         }
         const err = new APIError('No such entity exists!', httpStatus.NOT_FOUND);
         return Promise.reject(err);
@@ -40,8 +40,12 @@ const genericSchema = function genericSchemaPlugin (schema, options) {
          * @param {String} name - The entity's name.
          * @returns {Promise<User, APIError>}
          */
-        getByName(name) {
-            return this.findOne({ name: name })
+        getByKeyAndValue(key, value) {
+
+            const queryObject = {};
+            queryObject[key] = value;
+
+            return this.findOne(queryObject)
                 .exec()
                 .then(resolvePromise);
         },

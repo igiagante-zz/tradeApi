@@ -1,75 +1,48 @@
 
 const expect = require('chai').expect;
 const mongoose = require('mongoose');
-const {initDB, cleanDB} = require('../mongo/mongo_config');
-const userModel = require('../../src/models/user');
-
-/**
- * root level hooks
- */
-after((done) => {
-    // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
-    mongoose.models = {};
-    mongoose.modelSchemas = {};
-    mongoose.connection.close();
-    done();
-  });
-
+const { initDB, cleanDB } = require('../mongo/mongo_config');
+const UserModel = require('../../src/models/user');
   
 describe('User tests', () => {
 
     const testData = require('../resources/users.json');
 
-    it('should find all users', function() {
+    beforeEach(() => initDB(testData));
+    afterEach(() => cleanDB(testData));
 
-        //const dataReady = await initDB(testData);
-        //const users = await userModel.list();
+    it('should failed trying to save an user that already exists', async () => {
 
-        initDB(testData)
-        .then((() => userModel.list()))
-        .then((users) => {
-            expect(users.length).to.equal(2);
-            expect(users[0]._doc.firstname).to.equal('jose');
+        const user = new UserModel ({
+            firstname: "pepe",
+            lastname: "almendra",
+            email: "pepe@gmial.com",
+            password: "pepe"
         });
-      })
-/*
-    beforeEach((done) => { 
-        initDB(testData)
-        .then(() => {
-            console.log(' initializing database ');
-            done();
-        });
-    });
 
-    afterEach(function (done) {
-
-        const mongoUri = "mongodb://localhost/trade-test";
-
-        const remove = () => {
-            userModel.remove().exec()
-            .then(() => {
-                mongoose.connection.close();
-                done();
-            });
-        }
-    
-        if (mongoose.connection.readyState === 0) {
-            const connection = mongoose.connect(mongoUri, { useMongoClient: true });
-            
-            mongoose.connection.on('error', (error) => {
-                throw new Error(`unable to connect to database: ${mongoUri}`);
-            });
-            remove();
-        } else {
-            remove();
+        try {
+            const users = await user.save(user);
+        } catch (error) {
+            // then
+            expect(error.name).to.equal('MongoError');
+            expect(error.code).to.equal(11000);
         }
     });
 
-    
-    afterEach((done) => { 
-        mongoose.connection.close();
-        //cleanDB(testData);
-        done();
-    });*/
+    it('should find all users', async () => {
 
+        const users = await UserModel.list();
+
+        expect(users.length).to.equal(2);
+        expect(users[0]._doc.firstname).to.equal('pepe');
+
+    });
+
+    it('should find an user by name', async () => {
+
+        const user = await UserModel.getByKeyAndValue('firstname', 'jose');
+        expect(user.email).to.equal('jose@gmial.com');
+
+    });
+    
 });

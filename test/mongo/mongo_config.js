@@ -34,18 +34,14 @@ const connectionTest = () => {
 
     const cleanDB = (data) => {
 
-        setTimeout(( ) => {
-        connect()
+        return connect()
             .then(db => db.collections)
             .then(collections => {
                 const requests = Object.keys(data).map(col => {
                     return collections[col].remove({});
                   })
-                  console.log(' call remove from each collection ');
                 return Promise.all(requests);
             }).catch(e => console.log('Mongoose Error : '  + e));
-        }, 2000);
-
     };
 
     const initDB = (data) => {
@@ -54,13 +50,9 @@ const connectionTest = () => {
             db => {
                 
                 const requests = Object.keys(data).map(col => {
-
                     const collection = db.collection(col);
-                    
                     return data[col].map(item => collection.save(item));
-
                   })
-                  console.log(' call insert for each collection ');
 
                 return Promise.all(requests);
             }

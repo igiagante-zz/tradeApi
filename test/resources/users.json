@@ -1,14 +1,14 @@
 {
     "users": [
       {
-        "firstname": "jose",
+        "firstname": "pepe",
         "lastname": "almendra",
         "email": "pepe@gmial.com",
         "password": "pepe"
       },
       {
-        "firstname": "other",
-        "lastname": "other",
+        "firstname": "jose",
+        "lastname": "termidor",
         "email": "jose@gmial.com",
         "password": "other"
       }

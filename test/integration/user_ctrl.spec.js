@@ -13,6 +13,8 @@ const UserModel = require('../../src/models/user');
 
 const testData = require('../resources/users.json');
 
+after(() => cleanDB(testData));
+
 describe('## Auth APIs', () => {
 
 beforeEach(() => cleanDB(testData));

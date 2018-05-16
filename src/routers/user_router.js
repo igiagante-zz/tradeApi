@@ -1,7 +1,7 @@
-'use strict';
 
-let express = require('express'),
-    userCtrl = require('../controllers/user_ctrl');
+
+const express = require('express');
+const userCtrl = require('../controllers/user_ctrl');
 
 const router = express.Router(); // eslint-disable-line new-cap
 

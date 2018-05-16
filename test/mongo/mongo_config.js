@@ -34,42 +34,40 @@ const connectionTest = () => {
 
     const cleanDB = (data) => {
 
-        setTimeout(() => {
-
+        setTimeout(( ) => {
         connect()
-            .then(db => {
-                
-                console.log('db.collections : ' + db.collections);
-                return db.collections;
-            })
-           
+            .then(db => db.collections)
             .then(collections => {
                 const requests = Object.keys(data).map(col => {
-                    console.log('Deleting collection : ' + collections[col]);
                     return collections[col].remove({});
                   })
+                  console.log(' call remove from each collection ');
                 return Promise.all(requests);
-            }).catch(e => console.log(`unable to connect to database: ${mongoUri} ` + e));
+            }).catch(e => console.log('Mongoose Error : '  + e));
+        }, 2000);
 
-        }, 1000);
     };
 
     const initDB = (data) => {
 
-        connect().then(
+       return connect().then(
             db => {
+                
                 const requests = Object.keys(data).map(col => {
-                    const collection = db.collection(col);
-                    console.log('collection : ' + collection);
-                    return collection.insert(data[col]);
-                  })
-                  return Promise.all(requests) ;
-            }
-        ).catch(e => console.log(`unable to connect to database: ${mongoUri} ` + e));
-    
-      }
 
-    return Object.assign({}, {initDB, cleanDB});
+                    const collection = db.collection(col);
+                    
+                    return data[col].map(item => collection.save(item));
+
+                  })
+                  console.log(' call insert for each collection ');
+
+                return Promise.all(requests);
+            }
+        ).catch(e => console.log('Mongoose Error : ' + e));
+    };
+
+    return Object.assign({}, { initDB, cleanDB });
 }
 
 module.exports = connectionTest();

@@ -13,7 +13,7 @@ mongo.connect().then((result) => {
     console.log(result);
 
     app.listen(settings.port);
-    console.log(`Server started succesfully, running on port: ${settings.port}.`)
+    console.log(`Server started succesfully, running on port: ${settings.port}. \n \n`);
 
 }).catch(e => console.log(' Something was wrong ' + e));
 

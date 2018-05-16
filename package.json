@@ -25,10 +25,10 @@
     "winston": "~2.4.0"
   },
   "devDependencies": {
-    "mocha": "^4.0.1",
+    "mocha": "3.2.0",
     "chai": "^4.1.2",
     "sinon": "^4.1.3",
-    "istanbul": "^0.4.5",
+    "istanbul": "1.1.0-alpha.1",
     "supertest": "^3.0.0",
     "supertest-as-promised": "^4.0.2",
     "eslint": "^4.19.1",
@@ -49,7 +49,7 @@
     "lint": "standard --verbose | snazzy",
     "node-debug": "DEBUG=trade* node src/index.js",
     "chrome-debug": "node --debug-brk --inspect src/index.js",
-    "coverage": "istanbul cover _mocha $(find ./src -name \"*.spec.js\" -not -path \"./node_modules/*\") ",
+    "coverage": "istanbul cover _mocha -- -R spec --recursive test ./node_modules/.bin/codecov",
     "metric": "nodejs-dashboard -- node -r nodejs-dashboard src/index.js"
   },
   "repository": {

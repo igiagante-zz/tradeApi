@@ -78,5 +78,5 @@ afterEach(() => cleanDB(testData));
                     .catch(done);
             });
         })
-  });
+    });
 });

@@ -1,8 +1,8 @@
 # Trade Strategy App
 
-Learning about trading requires a lot of discipline, especially to avoid repeating the same mistakes. Some traders recommend a trades journal and then review those trades that were successful or a disaster. In addition, beginners also neglect their capital to a large extent and this implies a great risk.
+Learning about trading requires a lot of discipline, especially to avoid repeating the same mistakes. Experienced traders recommend to carry out (o en vez de carry out poner "to do") a trades register to be able to review the trades that were either succesful or unprofitable.
 
-Training as a trader requires good tracking of trades and management of capital risk. Therefore, a website and an application can be a very good tool for the trader to improve his performance and not lose his account in a few minutes.
+Training as a trader requires good tracking of trades and management of capital risk. Therefore, a website and an application can be a very useful tool for the trader to improve his performance and not ruin his account in a few minutes.
 
 # First Approach
 
@@ -42,9 +42,9 @@ Training as a trader requires good tracking of trades and management of capital 
   * Fetch Trade (Order Filled)
 
 
-### Arquitecture
+## Arquitecture
 
-## Web - App   ------>   consume API (this project)    ------> consume API's exchanges   (REST & Websocket)
+![alt tag](https://i.imgur.com/COAX8o4.png)
 
 ## Getting Started
 
@@ -54,18 +54,18 @@ git clone https://github.com/igiagante/tradeApi.git
 cd tradeApi
 ```
 
-Install dependencies:
+Install dependencies
 ```sh
 npm install
 ```
 
-Start server:
+Start server
 ```sh
 # Start server
 npm start
 ```
 
-Tests:
+Tests
 ```sh
 # Run all tests (integration & unit)
 npm test
@@ -74,7 +74,7 @@ npm test
 npm run coverage
 ```
 
-Lint:
+Lint
 ```sh
 # Lint code with ESLint
 npm run eslint

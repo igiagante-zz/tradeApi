@@ -1,6 +1,6 @@
 # Trade Strategy App
 
-Learning about trading requires a lot of discipline, especially to avoid repeating the same mistakes. Experienced traders recommend to carry out (o en vez de carry out poner "to do") a trades register to be able to review the trades that were either succesful or unprofitable.
+Learning about trading requires a lot of discipline, especially to avoid repeating the same mistakes. Experienced traders recommend to carry out a trades register to be able to review the trades that were either succesful or unprofitable.
 
 Training as a trader requires good tracking of trades and management of capital risk. Therefore, a website and an application can be a very useful tool for the trader to improve his performance and not ruin his account in a few minutes.
 

@@ -4,9 +4,15 @@ Learning about trading requires a lot of discipline, especially to avoid repeati
 
 Training as a trader requires good tracking of trades and management of capital risk. Therefore, a website and an application can be a very good tool for the trader to improve his performance and not lose his account in a few minutes.
 
-* **First Approach**
+# First Approach
 
+## Trades & Balance Screens
 
+![alt tag](https://i.imgur.com/nWO9TTm.png)
+
+## Trade Detail & Trade Notes Screens
+
+![alt tag](https://i.imgur.com/raa3HSa.png)
 
 ## Use Cases v1
 
@@ -36,7 +42,42 @@ Training as a trader requires good tracking of trades and management of capital 
   * Fetch Trade (Order Filled)
 
 
-* **Arquitecture**
+### Arquitecture
 
-Web - App   ------>   consume API (this project)    ------> consume API's exchanges   (REST & Websocket)
+## Web - App   ------>   consume API (this project)    ------> consume API's exchanges   (REST & Websocket)
 
+## Getting Started
+
+Clone the repo:
+```sh
+git clone https://github.com/igiagante/tradeApi.git
+cd tradeApi
+```
+
+Install dependencies:
+```sh
+npm install
+```
+
+Start server:
+```sh
+# Start server
+npm start
+```
+
+Tests:
+```sh
+# Run all tests (integration & unit)
+npm test
+
+# Run coverage with Istanbul
+npm run coverage
+```
+
+Lint:
+```sh
+# Lint code with ESLint
+npm run eslint
+```
+
+##### In order to check the coverage report, the file index.html can be found at the folder coverage.

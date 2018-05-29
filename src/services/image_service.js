@@ -2,6 +2,18 @@ const Promise = require('bluebird');
 const imageMagick = Promise.promisifyAll(require('imagemagick'));
 const fs = Promise.promisifyAll(require("fs"));
 const im = require('imagemagick');
+const fileUtil = require('../helpers/fileUtil');
+
+Promise.config({
+  // Enable warnings
+  warnings: true,
+  // Enable long stack traces
+  longStackTraces: true,
+  // Enable cancellation
+  cancellation: true,
+  // Enable monitoring
+  monitoring: true
+});
 
 /**
  * Create an object with methods to obtain the images path (fullzise & thumb)
@@ -26,15 +38,8 @@ const imageObject = (folderToSaveImage, image) => {
     */
     let createDirectories = () => {
 
-      // Promisify exists function using a wrapper because of this issue 
-      // https://github.com/petkaantonov/bluebird/issues/418
-      fs.existsAsync = Promise.promisify
-      (function exists2(path, exists2callback) {
-          fs.exists(path, function callbackWrapper(exists) { exists2callback(null, exists); });
-      });
-
       let createImageDirectory = (folderName) => {
-        return fs.existsAsync(folderName)
+        return fileUtil.existsAsync(folderName)
         .then(exists => !exists ? fs.mkdirAsync(folderName) : Promise.resolve())
         .catch(error => Promise.reject(error));
       };
@@ -44,7 +49,7 @@ const imageObject = (folderToSaveImage, image) => {
 
       return Promise.all([createFullsizeImageDirectory, createThumbImageDirectory]);
     };
-
+    
     /**
     * Save fullsize image. If the param resize is true, the image will be resize and save
     * at the folder thumb.
@@ -63,6 +68,10 @@ const imageObject = (folderToSaveImage, image) => {
         })
         .then(() => {
           console.log(' Rename  Filename ... ');
+          // Sometimes it appears a weird behaviour trying to call fs.exits
+          if(fileUtil.compareFilenameFromPath(image.path, fullsizeImagePath)) {
+            return Promise.resolve();
+          }
           return fs.renameAsync(image.path, fullsizeImagePath);
         })
         .then(() => {
@@ -70,8 +79,14 @@ const imageObject = (folderToSaveImage, image) => {
           return fs.writeFileAsync(filename, image.file);
         })
         .then(() => {
-          console.log(' Resize  Image File  ... ');
-          return imageMagick.resizeAsync({ srcPath: fullsizeImagePath, dstPath: thumbImagePath, width: 400 });
+          // Research how promises and functions scope are related
+          // Without the following statement, resize results to be undefined
+          const imageShouldBeResize = resize;
+          if(imageShouldBeResize) {
+            console.log(' Resize  Image File  ... ');
+            return imageMagick.resizeAsync({ srcPath: fullsizeImagePath, dstPath: thumbImagePath, width: 400 });
+          }
+          return Promise.resolve();
         });
     }
 

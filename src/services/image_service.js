@@ -3,84 +3,83 @@ const imageMagick = Promise.promisifyAll(require('imagemagick'));
 const fs = Promise.promisifyAll(require('fs'));
 const fileUtil = require('../helpers/fileUtil');
 
+const pathImagesUploaded = `${process.cwd()}/public/images/uploads`;
+
 /**
- * Create an object with methods to obtain the images path (fullzise & thumb)
- * @param {String} folderName - The folder name.
- * @param {Object} image - The image object.
- * @returns {Object} - Contains path to fullsize and thumb images folder
- */
-const imageObject = (folderToSaveImage, image) => {
-  // throw error if image does not have an originalname
+ * Create directories images if they dont exist
+ * @param {String} userFolder - Place where the user will have his images
+* @return {Object} - Contains fullsize and thumb image folder paths
+*/
+const createDirectories = (userFolder) => {
+  const createImageDirectory = folderName => fileUtil.existsAsync(folderName)
+    .then(exists => (!exists ? fs.mkdirAsync(folderName) : Promise.resolve()))
+    .catch((error) => {
+      console.log(` mkdir error : ${error}`);
+      Promise.reject(error);
+    });
 
-  const pathImagesUploaded = `${process.cwd()}/public/images/uploads`;
+  // create user image folder
+  const userImagesDirectory = `${pathImagesUploaded}/${userFolder}`;
+  const createUserImageFolder = createImageDirectory(userImagesDirectory);
 
-  const fullsizeFolderPath = `${pathImagesUploaded}/fullsize/`;
-  const thumbFolderPath = `${pathImagesUploaded}/thumb/`;
+  // create fullsize and thumb image folders
+  const fullsizeFolderPath = `${userImagesDirectory}/fullsize/`;
+  const thumbFolderPath = `${userImagesDirectory}/thumb/`;
 
-  const fullsizeImagePath = fullsizeFolderPath.concat(image.originalname);
-  const thumbImagePath = thumbFolderPath.concat(image.originalname);
+  const createFullsizeImageDirectory = createImageDirectory(fullsizeFolderPath);
+  const createThumbImageDirectory = createImageDirectory(thumbFolderPath);
 
-  /**
-    * Create directories images if they dont exist
-    */
-  const createDirectories = () => {
-    const createImageDirectory = folderName => fileUtil.existsAsync(folderName)
-      .then(exists => (!exists ? fs.mkdirAsync(folderName) : Promise.resolve()))
-      .catch(error => Promise.reject(error));
-
-    const createFullsizeImageDirectory = createImageDirectory(fullsizeFolderPath);
-    const createThumbImageDirectory = createImageDirectory(thumbFolderPath);
-
-    return Promise.all([createFullsizeImageDirectory, createThumbImageDirectory]);
-  };
-
-    /**
-    * Save fullsize image. If the param resize is true, the image will be resize and save
-    * at the folder thumb.
-    * @param {Boolean} resize - Indicate if the image should be resize or not
-    * @return {Promise<>}
-    */
-  const saveImage = (resize = true) => {
-    // the file descriptor works only with single quote -- I do not know why
-    const filename = fullsizeImagePath.replace(/"/g, "'");
-
-    return createDirectories()
-      .then(() => {
-        console.log(' Create Directories ... ');
-        return Promise.resolve();
-      })
-      .then(() => {
-        console.log(' Rename  Filename ... ');
-        // Sometimes it appears a weird behaviour trying to call fs.exits
-        if (fileUtil.compareFilenameFromPath(image.path, fullsizeImagePath)) {
-          return Promise.resolve();
-        }
-        return fs.renameAsync(image.path, fullsizeImagePath);
-      })
-      .then(() => {
-        console.log(' Write  Image File  ... ');
-        return fs.writeFileAsync(filename, image.file);
-      })
-      .then(() => {
-        // Research how promises and functions scope are related
-        // Without the following statement, resize results to be undefined
-        const imageShouldBeResize = resize;
-        if (imageShouldBeResize) {
-          console.log(' Resize  Image File  ... ');
-          return imageMagick.resizeAsync({ srcPath: fullsizeImagePath, dstPath: thumbImagePath, width: 400 }); // eslint-disable-line
-        }
-        return Promise.resolve();
-      });
-  };
-
-  return Object.assign({}, {
-    fullsizeFolderPath,
-    thumbFolderPath,
-    fullsizeImagePath,
-    thumbImagePath,
-    saveImage,
-  });
+  return createUserImageFolder
+    .then(() => Promise.all([createFullsizeImageDirectory, createThumbImageDirectory]))
+    .then(() => Promise.resolve({ fullsizeFolderPath, thumbFolderPath }));
 };
 
-module.exports = imageObject;
+/**
+* Save fullsize image. If the param resize is true, the image will be resized and saved
+* at the folder thumb.
+* @param {Object}
+* @return {Promise<>}
+*/
+const saveImage = (image, userFolders) => {
+  // concat folder with file orginal name
+  const fullsizeImagePath = `${userFolders.fullsizeFolderPath}${image.originalname}`;
+  const thumbImagePath = `${userFolders.thumbFolderPath}${image.originalname}`;
+  const filename = fullsizeImagePath.replace(/"/g, "'");
+
+  return Promise.resolve()
+    .then(() => {
+      console.log(' Rename  Filename ... ');
+      // Sometimes it appears a weird behaviour trying to call fs.exits
+      if (fileUtil.compareFilenameFromPath(image.path, fullsizeImagePath)) {
+        return Promise.resolve();
+      }
+      return fs.renameAsync(image.path, fullsizeImagePath);
+    })
+    .then(() => {
+      console.log(' Write  Image File  ... ');
+      return fs.writeFileAsync(filename, image.file);
+    })
+    .then(() => {
+      console.log(' Resize  Image File  ... ');
+        return imageMagick.resizeAsync({ srcPath: fullsizeImagePath, dstPath: thumbImagePath, width: 400 }); // eslint-disable-line
+    });
+};
+
+/**
+* Save a list of images
+* @param {String} folderName - The folder name.
+* @param {Array<Image>} image - List of images
+* @return {Promise<>}
+*/
+const saveImages = (foldername, images) => createDirectories(foldername)
+  .then((result) => {
+    console.log(' Create Directories ... ');
+    return Promise.resolve(result);
+  })
+  .then((userFolders) => {
+    console.log(' Save several images ... ');
+    return Promise.all(images.map(image => saveImage(image, userFolders)));
+  });
+
+module.exports = Object.assign({}, { saveImages });
 

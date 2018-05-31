@@ -8,9 +8,10 @@ const settings = require('../../src/config/settings');
 
 chai.config.includeStack = true;
 
+// Configure mongo db and insert some documents
 const { connection, cleanDB, initDB } = require('../mongo/mongo_config');
-const UserModel = require('../../src/models/user');
 
+const UserModel = require('../../src/models/user');
 const testData = require('../resources/users.json');
 
 after(() => cleanDB(testData));

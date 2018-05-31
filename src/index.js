@@ -2,6 +2,8 @@ const app = require('./config/express');
 const mongo = require('./config/mongo');
 const settings = require('./config/settings');
 
+const debug = require('debug')('index');
+
 mongo.connect().then((result) => {
   console.log(result);
 

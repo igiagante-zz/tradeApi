@@ -37,18 +37,10 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.11.0"
   },
-  "standard": {
-    "env": [
-      "mocha"
-    ],
-    "ignore": [
-      "mock"
-    ]
-  },
   "scripts": {
-    "test": "export NODE_ENV=test; mocha -R spec test/**/*.spec.js",
+    "test": "export NODE_ENV=test; DEBUG=trade* mocha -R spec test/**/*.spec.js",
     "start": "node src/index.js",
-    "eslint": "eslint src/**/*.js --fix",
+    "lint": "eslint src/**/*.js --fix",
     "node-debug": "DEBUG=trade* node src/index.js",
     "chrome-debug": "node --debug-brk --inspect src/index.js",
     "coverage": "istanbul cover _mocha -- -R spec --recursive test ./node_modules/.bin/codecov",

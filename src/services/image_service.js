@@ -3,18 +3,20 @@ const imageMagick = Promise.promisifyAll(require('imagemagick'));
 const fs = Promise.promisifyAll(require('fs'));
 const fileUtil = require('../helpers/fileUtil');
 
+const debug = require('debug')('tradeApi:ImageService');
+
 const pathImagesUploaded = `${process.cwd()}/public/images/uploads`;
 
 /**
- * Create directories images if they dont exist
- * @param {String} userFolder - Place where the user will have his images
+* Create directories images if they dont exist
+* @param {String} userFolder - Place where the user will have his images
 * @return {Object} - Contains fullsize and thumb image folder paths
 */
 const createDirectories = (userFolder) => {
   const createImageDirectory = folderName => fileUtil.existsAsync(folderName)
     .then(exists => (!exists ? fs.mkdirAsync(folderName) : Promise.resolve()))
     .catch((error) => {
-      console.log(` mkdir error : ${error}`);
+      debug(` mkdir error : ${error}`);
       Promise.reject(error);
     });
 
@@ -48,7 +50,7 @@ const saveImage = (image, userFolders) => {
 
   return Promise.resolve()
     .then(() => {
-      console.log(' Rename  Filename ... ');
+      debug(' Rename  Filename ... ');
       // Sometimes it appears a weird behaviour trying to call fs.exits
       if (fileUtil.compareFilenameFromPath(image.path, fullsizeImagePath)) {
         return Promise.resolve();
@@ -56,12 +58,12 @@ const saveImage = (image, userFolders) => {
       return fs.renameAsync(image.path, fullsizeImagePath);
     })
     .then(() => {
-      console.log(' Write  Image File  ... ');
+      debug(' Write  Image File  ... ');
       return fs.writeFileAsync(filename, image.file);
     })
     .then(() => {
-      console.log(' Resize  Image File  ... ');
-        return imageMagick.resizeAsync({ srcPath: fullsizeImagePath, dstPath: thumbImagePath, width: 400 }); // eslint-disable-line
+      debug(' Resize  Image File  ... ');
+      return imageMagick.resizeAsync({ srcPath: fullsizeImagePath, dstPath: thumbImagePath, width: 400 }); // eslint-disable-line
     });
 };
 
@@ -73,11 +75,11 @@ const saveImage = (image, userFolders) => {
 */
 const saveImages = (foldername, images) => createDirectories(foldername)
   .then((result) => {
-    console.log(' Create Directories ... ');
+    debug(' Create Directories ... ');
     return Promise.resolve(result);
   })
   .then((userFolders) => {
-    console.log(' Save several images ... ');
+    debug(' Save several images ... ');
     return Promise.all(images.map(image => saveImage(image, userFolders)));
   });
 

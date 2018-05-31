@@ -11,9 +11,13 @@ Promise = require('bluebird'); // eslint-disable-line no-global-assign
 // plugin bluebird promise in mongoose
 mongoose.Promise = Promise;
 
+/**
+* Provide functions to connect to mongoDB, initialize and clean database
+*/
 const connectionTest = () => {
 
     // connect to mongo db
+    // TODO: move this const to some env var
     const mongoUri = "mongodb://localhost/trade-test";
 
     const connection = () => {

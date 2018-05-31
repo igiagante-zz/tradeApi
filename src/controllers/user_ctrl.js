@@ -9,6 +9,8 @@ const httpStatus = require('http-status');
 
 const userNotFound = 'USER_NOT_FOUND';
 
+const debug = require('debug')('tradeApi:UserController');
+
 const _createToken = function (user) {
   const payload = {
     sub: user._id, /* eslint no-underscore-dangle: 0 */
@@ -32,7 +34,7 @@ const signup = function (req, res, next) {
     newUser.save()
       .then(savedUser => res.status(200).json({ token: _createToken(savedUser) }))
       .catch((e) => {
-        console.log(`error : ${e}`);
+        debug(`error : ${e}`);
         next(e);
       });
   }

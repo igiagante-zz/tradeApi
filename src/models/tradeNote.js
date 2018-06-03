@@ -12,7 +12,7 @@ const TradeNoteSchema = new Schema({ // eslint-disable-line
       url: { type: String, required: true },
       thumbnailUrl: { type: String, required: true },
       name: { type: String, required: true },
-      type: { type: String, required: true },
+      mimetype: { type: String, required: true },
       size: Number,
       main: { type: Boolean, default: false },
     },
@@ -20,3 +20,5 @@ const TradeNoteSchema = new Schema({ // eslint-disable-line
 });
 
 TradeNoteSchema.plugin(genericModel);
+
+module.exports = mongoose.model('TadeNote', TradeNoteSchema);

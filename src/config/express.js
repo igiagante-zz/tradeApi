@@ -14,9 +14,12 @@ const APIError = require('../helpers/APIError');
 
 const app = express();
 
-// parse body params and attache them to req.body
+// parse body params and attach them to req.body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// for parsing multipart/form-data
+// app.use(multer());
 
 // secure apps by setting various HTTP headers
 app.use(helmet());

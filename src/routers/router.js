@@ -1,8 +1,11 @@
 
 const express = require('express');
 const jwt = require('jwt-simple');
-const userRouter = require('./user_router');
 const settings = require('../config/settings');
+
+// Routers
+const userRouter = require('./user_router');
+const tradeNoteRouter = require('./tradeNote_router');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -32,5 +35,6 @@ router.get('/secret', isUserAuthenticated, (req, res) => {
 });
 
 router.use('/users', userRouter);
+router.use('/tradeNotes', tradeNoteRouter);
 
 module.exports = router;

@@ -22,22 +22,21 @@ const _createToken = function (user) {
 
 const signup = function (req, res, next) {
   if (!req.body.email || !req.body.password) {
-    res.json({ success: false, msg: 'Please pass name and password.' });
-  } else {
-    const newUser = new User({
-      firstname: 'pepe',
-      lastname: 'almendra',
-      email: 'pepe@gmaill.com',
-      password: 'pepe',
-    });
-
-    newUser.save()
-      .then(savedUser => res.status(200).json({ token: _createToken(savedUser) }))
-      .catch((e) => {
-        debug(`error : ${e}`);
-        next(e);
-      });
+    return res.json({ success: false, msg: 'Please pass name and password.' });
   }
+  const newUser = new User({
+    firstname: 'pepe',
+    lastname: 'almendra',
+    email: 'pepe@gmaill.com',
+    password: 'pepe',
+  });
+
+  return newUser.save()
+    .then(savedUser => res.status(200).json({ token: _createToken(savedUser) }))
+    .catch((e) => {
+      debug(`error : ${e}`);
+      next(e);
+    });
 };
 
 const login = async function (req, res, next) {

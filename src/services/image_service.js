@@ -3,6 +3,8 @@ const imageMagick = Promise.promisifyAll(require('imagemagick'));
 const fs = Promise.promisifyAll(require('fs'));
 const fileUtil = require('../helpers/fileUtil');
 
+const Image = require('../models/image');
+
 const debug = require('debug')('tradeApi:ImageService');
 
 const pathImagesUploaded = `${process.cwd()}/public/images/uploads`;
@@ -37,16 +39,31 @@ const createDirectories = (userFolder) => {
 };
 
 /**
+* Concat user folder name with the original image name to create the image's path
+* @param {String} foldername - The folder where the user will have saved his images
+* @param {String} originalname - The original image name
+* @return {Object} {fullsizeImagePath, thumbImagePath}
+*/
+const concactFolderWithOriginalImageName = (foldername, originalname) => {
+  const fullsizeImagePath = `${pathImagesUploaded}/${foldername}/fullsize/${originalname}`.replace(/"/g, "'");
+  const thumbImagePath = `${pathImagesUploaded}/${foldername}/thumb/${originalname}`.replace(/"/g, "'");
+
+  return Object.assign({}, { fullsizeImagePath, thumbImagePath });
+};
+
+/**
 * Save fullsize image. If the param resize is true, the image will be resized and saved
 * at the folder thumb.
-* @param {Object}
+* @param {File} image
+* @param {String} userFolder - The folder where the user will have saved his images
 * @return {Promise<>}
 */
 const saveImage = (image, userFolders) => {
+  // add asserts for parameter validations
+
   // concat folder with file orginal name
-  const fullsizeImagePath = `${userFolders.fullsizeFolderPath}${image.originalname}`;
-  const thumbImagePath = `${userFolders.thumbFolderPath}${image.originalname}`;
-  const filename = fullsizeImagePath.replace(/"/g, "'");
+  const { fullsizeImagePath, thumbImagePath } =
+    concactFolderWithOriginalImageName(userFolders, image.originalname);
 
   return Promise.resolve()
     .then(() => {
@@ -59,7 +76,7 @@ const saveImage = (image, userFolders) => {
     })
     .then(() => {
       debug(' Write  Image File  ... ');
-      return fs.writeFileAsync(filename, image.file);
+      return fs.writeFileAsync(fullsizeImagePath, image.file);
     })
     .then(() => {
       debug(' Resize  Image File  ... ');
@@ -69,7 +86,7 @@ const saveImage = (image, userFolders) => {
 
 /**
 * Save a list of images
-* @param {String} folderName - The folder name.
+* @param {String} folderName - The folder name
 * @param {Array<Image>} image - List of images
 * @return {Promise<>}
 */
@@ -78,10 +95,38 @@ const saveImages = (foldername, images) => createDirectories(foldername)
     debug(' Create Directories ... ');
     return Promise.resolve(result);
   })
-  .then((userFolders) => {
+  .then(() => {
     debug(' Save several images ... ');
-    return Promise.all(images.map(image => saveImage(image, userFolders)));
+    return Promise.all(images.map(image => saveImage(image, foldername)));
   });
 
-module.exports = Object.assign({}, { saveImages });
+/**
+* Convert image files into Image Models
+* @param {String} folderName - The folder name
+* @param {Array<ImageModel>} image - List of image models
+* @return {Promise<>}
+*/
+const convertImageFilesToImageModel = function (folderName, images) {
+  const convertImageToModel = function (image) {
+    // concat folder with file orginal name
+    const { fullsizeImagePath, thumbImagePath } =
+      concactFolderWithOriginalImageName(folderName, image.originalname);
+
+    return new Image({
+      file: image.file,
+      url: fullsizeImagePath,
+      thumbnailUrl: thumbImagePath,
+      name: image.originalname,
+      mimetype: image.mimetype,
+      size: image.size,
+    });
+  };
+
+  return Promise.all(images.map(image => convertImageToModel(image)));
+};
+
+module.exports = Object.assign({}, {
+  saveImages,
+  convertImageFilesToImageModel,
+});
 

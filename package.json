@@ -41,7 +41,7 @@
   "scripts": {
     "test": "export NODE_ENV=test; DEBUG=trade* mocha -R spec test/**/*.spec.js",
     "start": "node src/index.js",
-    "lint": "eslint src/**/*.js --fix",
+    "lint": "eslint src --fix",
     "node-debug": "DEBUG=trade* node src/index.js",
     "chrome-debug": "node --debug-brk --inspect src/index.js",
     "coverage": "istanbul cover _mocha -- -R spec --recursive test ./node_modules/.bin/codecov",

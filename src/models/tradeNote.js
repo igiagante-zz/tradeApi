@@ -21,4 +21,4 @@ const TradeNoteSchema = new Schema({ // eslint-disable-line
 
 TradeNoteSchema.plugin(genericModel);
 
-module.exports = mongoose.model('TadeNote', TradeNoteSchema);
+module.exports = mongoose.model('TradeNote', TradeNoteSchema);

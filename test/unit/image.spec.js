@@ -30,7 +30,7 @@ describe('Image Service Tests', () => {
         const imageFullsizePath = process.cwd() + `/public/images/uploads/${folderName}/fullsize/${originalname}`;
         const imageThumbPath = process.cwd() + `/public/images/uploads/${folderName}/thumb/${originalname}`;
 
-        const imagePath = process.cwd() + `/test/images/${originalname}`;
+        const imagePath = process.cwd() + `/test/resources/image/images/${originalname}`;
         const copyImagePath = process.cwd() + `/public/images/uploads/${originalname}`;
 
         // take image from test folder and move it to /public/images/uploads/

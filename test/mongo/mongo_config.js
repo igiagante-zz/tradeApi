@@ -55,12 +55,16 @@ const connectionTest = () => {
                 
                 const requests = Object.keys(data).map(col => {
                     const collection = db.collection(col);
-                    return data[col].map(item => collection.save(item));
+                    return data[col].map(item => {
+                        collection.save(item);
+                    });
                   })
 
                 return Promise.all(requests);
             }
-        ).catch(e => console.log('Mongoose Error : ' + e));
+        ).catch(e => 
+            console.log('Mongoose Error : ' + e)
+        );
     };
 
     return Object.assign({}, { connection, initDB, cleanDB });

@@ -2,13 +2,17 @@ const app = require('./config/express');
 const mongo = require('./config/mongo');
 const settings = require('./config/settings');
 
-const debug = require('debug')('index');
+if(settings.env !== 'test') {
 
-mongo.connect().then((result) => {
-  console.log(result);
+  mongo.connect().then((result) => {
+    
+    console.log(result);
+  
+    app.listen(settings.port, () => {
+      console.info(`server started on port ${settings.port} (${settings.env})`); // eslint-disable-line no-console
+    });
 
-  app.listen(settings.port);
-  console.log(`Server started succesfully, running on port: ${settings.port}. \n \n`);
-}).catch(error => console.log(` Something was wrong:  ${error}`));
+  }).catch(error => console.log(` Something was wrong:  ${error}`));
+}
 
 module.exports = app;

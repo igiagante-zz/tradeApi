@@ -1,0 +1,28 @@
+{
+    "tradeNotes": [
+      {
+        "title": "A new trade note",
+        "description": "Start new impulsive wave",
+        "images" : [
+            {
+              "_id": "57756a10dd10525d70000001",
+              "url": "/uploads/images/fullsize/chart/count_btc.png",
+              "thumbnailUrl": "/uploads/images/thumb/chart/count_btc.png",
+              "name": "count_btc.png",
+              "mimetype": "mime/png",
+              "size": 234567,
+              "main": true
+            },
+            {
+              "_id": "57756a10dd10525d70000001",
+              "url": "/uploads/images/fullsize/chart/wedge_btc.png",
+              "thumbnailUrl": "/uploads/images/thumb/chart/wedge_btc.png",
+              "name": "wedge_btc.png",
+              "mimetype": "mime/png",
+              "size": 234567,
+              "main": false
+            }
+          ]
+      }
+    ]
+  }

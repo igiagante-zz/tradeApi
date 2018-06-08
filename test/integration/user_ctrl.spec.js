@@ -9,17 +9,17 @@ const settings = require('../../src/config/settings');
 chai.config.includeStack = true;
 
 // Configure mongo db and insert some documents
-const { connection, cleanDB, initDB } = require('../mongo/mongo_config');
+const { connection, cleanDB } = require('../mongo/mongo_config');
 
 const UserModel = require('../../src/models/user');
-const testData = require('../resources/users.json');
+const testData = require('../resources/user/users.json');
 
-after(() => cleanDB(testData));
+//after(() => cleanDB(testData));
 
 describe('## Auth APIs', () => {
 
 beforeEach(() => cleanDB(testData));
-afterEach(() => cleanDB(testData));
+//afterEach(() => cleanDB(testData));
 
   describe('# POST /api/users/signup', () => {
 

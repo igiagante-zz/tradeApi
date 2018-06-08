@@ -4,10 +4,10 @@ const mongoose = require('mongoose');
 const { initDB, cleanDB } = require('../mongo/mongo_config');
 const UserModel = require('../../src/models/user');
 
-const testData = require('../resources/users.json');
+const testData = require('../resources/user/users.json');
 
 after(() => cleanDB(testData));
-  
+
 describe('User tests', () => {
 
     beforeEach(() => initDB(testData));
@@ -15,15 +15,17 @@ describe('User tests', () => {
     
     it('should failed trying to save an user that already exists', async () => {
 
+            // before
         const user = new UserModel ({
             firstname: "pepe",
             lastname: "almendra",
-            email: "pepe@gmaill.com",
+            email: "pepe@gmail.com",
             password: "pepe"
         });
 
         try {
-            const users = await user.save(user);
+            // when
+            await user.save();
         } catch (error) {
             // then
             expect(error.name).to.equal('MongoError');
